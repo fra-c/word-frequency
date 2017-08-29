@@ -12,7 +12,7 @@ namespace WordFrequency;
 class ArrayValuesCounter
 {
     /**
-     * Counts the values in $array and return an associative array with the values as keys and the count as value.
+     * Counts the values in $array and returns an associative array with the values as keys and the count as value.
      *
      * @param string[] $array
      *

@@ -9,6 +9,9 @@
 
 namespace App\Command;
 
+use App\TextLoader\Exception\EmptyTextException;
+use App\TextLoader\Exception\FileNotFoundException;
+use App\TextLoader\TextLoader;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,6 +22,9 @@ class WordFrequencyCommand extends ContainerAwareCommand
 {
     const WORDS_LIMIT_DEFAULT = 100;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->setName('word-frequency')
@@ -33,30 +39,40 @@ class WordFrequencyCommand extends ContainerAwareCommand
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var TextLoader $textLoader */
+        $textLoader = $this->getContainer()->get('app.text-loader');
+
         $filePath = $input->getArgument('source');
 
-        if (!file_exists($filePath)) {
-            $output->writeln('File not found.');
+        try {
+            $text = $textLoader->load($filePath);
+        } catch (FileNotFoundException $exception) {
+            $output->writeln(sprintf('File "%s" not found.', $filePath));
             return static::EXIT_CODE_ERROR;
-        }
-
-        $text = file_get_contents($filePath);
-
-        if (empty($text)) {
-            $output->writeln('No words found in this file.');
+        } catch (EmptyTextException $exception) {
+            $output->writeln(sprintf('"%s" is an empty file.', $filePath));
             return static::EXIT_CODE_ERROR;
         }
 
         /** @var WordFrequencyCounter $wordFrequencyCounter */
-        $wordFrequencyCounter = $this->getContainer()->get('word-frequency-counter');
+        $wordFrequencyCounter = $this->getContainer()->get('word-frequency.word-frequency-counter');
 
         $mostFrequentWords = $wordFrequencyCounter->extractMostFrequentWords(
             $text,
             $input->getOption('limit') ?: static::WORDS_LIMIT_DEFAULT
         );
 
+        if (empty($mostFrequentWords)) {
+            $output->writeln(sprintf('No words found in "%s".', $filePath));
+            return static::EXIT_CODE_ERROR;
+        }
+
+        // Concatenate each $mostFrequentWords item to make a comma separated list (word,count)
         array_walk(
             $mostFrequentWords,
             function(&$item, $key) {

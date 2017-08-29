@@ -18,6 +18,11 @@ class Application extends ConsoleApplication
 {
     protected $container;
 
+    /**
+     * Application constructor.
+     * @param string $name
+     * @param string $version
+     */
     public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {
         $this->container = new ContainerBuilder();
@@ -28,6 +33,9 @@ class Application extends ConsoleApplication
         parent::__construct($name, $version);
     }
 
+    /**
+     * @return ContainerBuilder
+     */
     public function getContainer()
     {
         return $this->container;

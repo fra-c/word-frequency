@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+use App\Application;
+use App\Command\WordFrequencyCommand;
+
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        define('WORD_FREQUENCY_COMPOSER_INSTALL', $file);
+        unset($file);
+        break;
+    }
+}
+
+if (!defined('WORD_FREQUENCY_COMPOSER_INSTALL')) {
+    throw new RuntimeException('Unable to find composer autoload.');
+}
+
+require WORD_FREQUENCY_COMPOSER_INSTALL;
+
+$application = new Application();
+$wordFrequencyCommand = new WordFrequencyCommand();
+
+$application->add($wordFrequencyCommand);
+$application->setDefaultCommand($wordFrequencyCommand->getName(), true);
+
+$application->run();

@@ -16,6 +16,11 @@ class ContainerAwareCommand extends Command
     const EXIT_CODE_ERROR = 1;
     const EXIT_CODE_SUCCESS = 0;
 
+    /**
+     * Get the dependency injection container.
+     *
+     * @return mixed
+     */
     public function getContainer()
     {
         return $this->getApplication()->getContainer();

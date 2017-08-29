@@ -9,7 +9,6 @@
 
 namespace WordFrequency;
 
-
 class WordFrequencyCounter
 {
     /**
@@ -43,6 +42,17 @@ class WordFrequencyCounter
         $this->arraySortValueDescendingKeyAscending = $arraySortValueDescendingKeyAscending;
     }
 
+    /**
+     * Extracts words from $text counting their frequency.
+     *
+     * The resulting array will contain the words as keys and the count as values, ordered by count descending first and
+     * by word ascending when words have equal frequency.
+     *
+     * @param string $text
+     * @param int $limit
+     *
+     * @return array
+     */
     public function extractMostFrequentWords($text, $limit)
     {
         $wordsArray = $this->wordsToArrayConverter->convert($text);

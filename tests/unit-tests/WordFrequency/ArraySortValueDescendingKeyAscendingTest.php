@@ -15,6 +15,9 @@ use WordFrequency\ArraySortValueDescendingKeyAscending;
 
 class ArraySortValueDescendingKeyAscendingTest extends TestCase
 {
+    /**
+     * Tests sorting an array by value descending and by key ascending when value is equal.
+     */
     public function testSorting()
     {
         $array = [

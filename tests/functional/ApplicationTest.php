@@ -13,7 +13,6 @@ use App\Application;
 use App\Command\WordFrequencyCommand;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ApplicationTest extends TestCase
@@ -23,7 +22,10 @@ class ApplicationTest extends TestCase
      */
     protected $commandTester;
 
-    public function setUp()
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
     {
         $application = new Application();
 
@@ -34,26 +36,43 @@ class ApplicationTest extends TestCase
         $this->commandTester = new CommandTester($command);
     }
 
+    /**
+     * Tests a non-existing file. An error message should be displayed.
+     */
     public function testWordFrequencyCounterFileNotFound()
     {
+        $filePath = 'non-existing-file.txt';
+        $expectedOutput = sprintf('File "%s" not found.', $filePath) . PHP_EOL;
+
         $this->commandTester->execute([
-            'source' => 'non-existing-file.txt'
+            'source' => $filePath
         ]);
 
         $output = $this->commandTester->getDisplay();
-        Assert::assertContains('File not found', $output);
+
+        Assert::assertSame($expectedOutput, $output);
     }
 
-    public function testWordFrequencyCounterFileWithNoWords()
+    /**
+     * Tests an empty text file. An error message should be displayed.
+     */
+    public function testWordFrequencyCounterEmptyFile()
     {
+        $filePath = __DIR__.'/fixtures/empty-file.txt';
+        $expectedOutput = sprintf('"%s" is an empty file.', $filePath) . PHP_EOL;
+
         $this->commandTester->execute([
-            'source' => __DIR__.'/fixtures/file-with-no-words.txt'
+            'source' => $filePath
         ]);
 
         $output = $this->commandTester->getDisplay();
-        Assert::assertContains('No words found in this file.', $output);
+
+        Assert::assertSame($expectedOutput, $output);
     }
 
+    /**
+     * Tests a file containing text. A list of words along with their frequency should be displayed.
+     */
     public function testWordFrequencyCounterFileWithWords()
     {
         $this->commandTester->execute([
@@ -62,7 +81,7 @@ class ApplicationTest extends TestCase
 
         $output = $this->commandTester->getDisplay();
 
-        $expectedResult = <<<EOF
+        $expectedOutput = <<<EOF
 sells,4
 she,4
 seashore,3
@@ -81,9 +100,12 @@ surely,1
 
 EOF;
 
-        Assert::assertSame($expectedResult, $output);
+        Assert::assertSame($expectedOutput, $output);
     }
 
+    /**
+     * Tests the default limit of words to display.
+     */
     public function testWordFrequencyCounterDefaultLimit()
     {
         $this->commandTester->execute([
@@ -95,6 +117,9 @@ EOF;
         Assert::assertCount(WordFrequencyCommand::WORDS_LIMIT_DEFAULT, explode(PHP_EOL, $output));
     }
 
+    /**
+     * Tests the "limit" option. When passed to the command the output should be limited to this value.
+     */
     public function testWordFrequencyCounterWithLimit()
     {
         $this->commandTester->execute([
@@ -104,13 +129,30 @@ EOF;
 
         $output = $this->commandTester->getDisplay();
 
-        $expectedResult = <<<EOF
+        $expectedOutput = <<<EOF
 sells,4
 she,4
 seashore,3
 
 EOF;
 
-        Assert::assertSame($expectedResult, $output);
+        Assert::assertSame($expectedOutput, $output);
+    }
+
+    /**
+     * Tests a file with no words. An error message should be displayed
+     */
+    public function testWordFrequencyCounterFileWithNoWords()
+    {
+        $filePath = __DIR__.'/fixtures/file-with-no-words.txt';
+        $expectedOutput = sprintf('No words found in "%s".', $filePath) . PHP_EOL;
+
+        $this->commandTester->execute([
+            'source' => $filePath
+        ]);
+
+        $output = $this->commandTester->getDisplay();
+
+        Assert::assertSame($expectedOutput, $output);
     }
 }

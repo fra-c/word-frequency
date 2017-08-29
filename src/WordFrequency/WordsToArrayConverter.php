@@ -14,7 +14,7 @@ class WordsToArrayConverter
     const REGEXP_ANY_NON_WORD = '/\W+/';
 
     /**
-     * Return all the words found in $text as an array.
+     * Returns all the words found in $text as an array.
      *
      * @param string $text The text from which the words will be extracted.
      *

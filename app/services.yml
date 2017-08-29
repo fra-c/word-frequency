@@ -1,20 +1,23 @@
 services:
 
-  word-frequency-counter:
+  word-frequency.word-frequency-counter:
     class: WordFrequency\WordFrequencyCounter
     arguments:
-      - '@words-to-array-converter'
-      - '@array-values-counter'
-      - '@array-sort-value-descending-key-ascending'
+      - '@word-frequency.words-to-array-converter'
+      - '@word-frequency.array-values-counter'
+      - '@word-frequency.array-sort-value-descending-key-ascending'
 
-  words-to-array-converter:
+  word-frequency.words-to-array-converter:
     class: WordFrequency\WordsToArrayConverter
     public: false
 
-  array-values-counter:
+  word-frequency.array-values-counter:
     class: WordFrequency\ArrayValuesCounter
     public: false
 
-  array-sort-value-descending-key-ascending:
+  word-frequency.array-sort-value-descending-key-ascending:
     class: WordFrequency\ArraySortValueDescendingKeyAscending
     public: false
+
+  app.text-loader:
+    class: App\TextLoader\TextLoader

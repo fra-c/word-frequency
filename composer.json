@@ -1,5 +1,5 @@
 {
-    "name": "francesco/word-frequency",
+    "name": "word-frequency/word-frequency",
     "description": "A command line tool that displays the most frequent words in a text file.",
     "type": "project",
     "authors": [
@@ -27,5 +27,5 @@
     "config": {
         "bin-dir": "bin"
     },
-    "bin": ["app/word-frequency"]
+    "bin": ["word-frequency"]
 }

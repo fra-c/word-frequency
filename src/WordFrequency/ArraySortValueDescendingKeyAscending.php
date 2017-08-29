@@ -12,7 +12,7 @@ namespace WordFrequency;
 class ArraySortValueDescendingKeyAscending
 {
     /**
-     * Sort an array by value descending and by key descending
+     * Sorts an array by value descending and by key descending.
      *
      * @param array $array
      *

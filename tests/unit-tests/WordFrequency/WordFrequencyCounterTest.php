@@ -9,7 +9,6 @@
 
 namespace Test\WordFrequency;
 
-
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use WordFrequency\ArraySortValueDescendingKeyAscending;
@@ -32,5 +31,16 @@ class WordFrequencyCounterTest extends TestCase
         );
 
         Assert::assertSame($expectedResult, $wordFrequencyCounter->extractMostFrequentWords($text, 2));
+    }
+
+    public function testEmptyArrayIsReturnedWhenNoWordsFound()
+    {
+        $wordFrequencyCounter = new WordFrequencyCounter(
+            new WordsToArrayConverter(),
+            new ArrayValuesCounter(),
+            new ArraySortValueDescendingKeyAscending()
+        );
+
+        Assert::assertSame([], $wordFrequencyCounter->extractMostFrequentWords('!$£%^,./,', 2));
     }
 }
