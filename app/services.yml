@@ -1,0 +1,20 @@
+services:
+
+  word-frequency-counter:
+    class: WordFrequency\WordFrequencyCounter
+    arguments:
+      - '@words-to-array-converter'
+      - '@array-values-counter'
+      - '@array-sort-value-descending-key-ascending'
+
+  words-to-array-converter:
+    class: WordFrequency\WordsToArrayConverter
+    public: false
+
+  array-values-counter:
+    class: WordFrequency\ArrayValuesCounter
+    public: false
+
+  array-sort-value-descending-key-ascending:
+    class: WordFrequency\ArraySortValueDescendingKeyAscending
+    public: false
